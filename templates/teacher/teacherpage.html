@@ -1,0 +1,58 @@
+{% load staticfiles %}
+<!DOCTYPE HTML>
+<!--
+	Ethereal by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>FaceRecognition</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+	</head>
+	<body>
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
+				<!-- Wrapper -->
+					<div id="wrapper" style=" margin: auto ">
+						<!-- Panel (Banner) -->
+						<section class="panel color2">
+								<div class="inner columns divided" style="background:url({% static 'images/head_back.png' %}) no-repeat left top ">
+
+									<div class="span-1-25">
+{#                                        onclick="location.href='{% url 'teacher:tLogin' %}#}
+                                        <img id="fanhui" src="{% static 'images/fanhui_yellow.png' %}" style="position:absolute ;top:0;left:0;"  onclick="location.href='http://127.0.0.1:8000/'">
+                                       <div>
+                                           <img src="{% static 'images/teacherhead.png' %}" >
+                                        <br>
+
+                                        <h3>老师姓名：{{ request.session.tName }}</h3>
+                                        <h3>性别：{{ tSex }}</h3>
+                                       </div>
+									</div>
+                                </div>
+                                <div class="inner columns divided" style="background:url({% static 'images/banner.png' %}) no-repeat right top ">
+									<div class="span-2-25">
+                                        <div >
+                                            <a href="{% url 'teacher:tPub' %}" class="button large special color2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;发布签到&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                                        </div>
+                                        <br>
+                                        <div >
+                                            <a href="{% url 'teacher:tSignpage' %}" class="button large special color4">&nbsp;&nbsp;&nbsp;&nbsp;全部考勤信息&nbsp;&nbsp;&nbsp;</a>
+                                        </div>
+
+									</div>
+
+								</div>
+							</section>
+					</div>
+			</div>
+		<!-- Scripts -->
+
+			<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+			<script src="{% static 'assets/js/main.js' %}"></script>
+	</body>
+</html>
+

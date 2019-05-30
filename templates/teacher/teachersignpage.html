@@ -1,0 +1,192 @@
+{% load staticfiles %}
+<!DOCTYPE HTML>
+<!--
+	Ethereal by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>FaceRecognition</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+		
+	</head>
+	<body>
+	<div id="page-wrapper">
+				<!-- Wrapper -->
+					<div id="wrapper" style=" margin: auto ">
+                            <section class="panel color2-alt">
+							<div class="inner columns divided" style="background:url({% static 'images/head_back.png' %}) no-repeat left top ">
+									<div class="span-1-20" >
+                                         <img id="fanhui" src="{% static 'images/fanhui_yellow.png' %}" style="position:absolute ;top:0;left:0;" onclick="location.href='{% url 'teacher:tPage' %}'">
+
+										<div style="width: 200px">
+                                            <img src="{% static 'images/teacherhead.png' %}"  >
+                                            <hr>
+                                        </div>
+                                        <h3 class="major"></h3>
+                                        <h4>老师姓名：{{ request.session.tName }}</h4>
+
+                                        <h4>性别：{{ tSex }}</h4>
+									</div>
+									</div>
+
+									</section>
+									<section class="panel color2-alt">
+								<div class="inner columns aligned">
+									<div class="span-4" >
+
+                                            <div class="field ">
+												<label for="demo-category"><h4>考勤信息</h4></label>
+												<div class="select-wrapper">
+													<select name="demo-category" id="course"  onchange="getcourse(this.value)">
+                                                        {% for cou in  course%}
+														<option value={{ cou.cLabel }}>{{ cou.cName}} &nbsp&nbsp&nbsp&nbsp{{ cou.cClassDay}}</option>
+{#                                                        <option value="yingyu">专业英语</option>#}
+                                                        {% endfor %}
+
+													</select>
+												</div>
+
+											</div>
+
+
+										<div class="table-wrapper">
+											<table id="table">
+												<thead>
+													<tr>
+														<th>Name</th>
+														<th>number</th>
+														<th>time</th>
+                                                        <th>week</th>
+                                                        <th>day</th>
+														<th>status</th>
+													</tr>
+												</thead>
+												<tbody>
+                                                {% for info in signInfo %}
+													<tr>
+														<td>{{ info.sName }}</td>
+														<td>{{ info.sNum }}</td>
+														<td>{{ info.sSignTime}}</td>
+                                                        <td>{{ info.cClassWeek }}</td>
+                                                        <td>{{ info.cClassDay }}</td>
+                                                         {% if sign.state == 1 %}
+                                                            <td  style="background: url({% static 'images/true.png' %}) no-repeat 25% center ; background-size:20px 20px;"></td>
+                                                        {% else %}
+                                                            <td  style="background: url({% static 'images/no.png' %}) no-repeat 25% center ; background-size:20px 20px;"></td>
+                                                        {% endif %}
+													</tr>
+                                                {% endfor %}
+
+												</tbody>
+											</table>
+										</div>
+                                            <div id="pre" hidden style="float: left"><a  href="#" class="button color small  icon fa-angle-left"  onclick="getpage(0)"> pre</a></div>
+                                        <div style="float: right"><a href="#" class="button small color icon fa-angle-right" onclick="getpage(1)"> next</a></div>
+									</div>
+									</div>
+							</section>
+								</div>
+			</div>
+    <script type="application/javascript">
+            var sta=0;
+            var datas="{{ datas }}";
+            function getpage(ele){
+                $("#pre").show();
+                $("#table  tr:not(:first)").empty("");
+                var sta=0;
+                if(ele==1){
+                    sta+=1;
+                }
+                else{
+                 sta-=1;
+                }
+
+                for(var i=(sta)*5;i<(sta+1)*5 ;i++){
+                          var name=datas[x].sName;
+                          var time=datas[x].sSignTime;
+                          var number=datas[x].sNum;
+                          var week=datas[x].cClassWeek;
+                          var day=datas[x].cClassDay;
+                          if(datas[x].state==1){
+                               var sta='<img src="{% static 'images/true.png' %}" height="20px" width="20px">';
+                          }
+                          else {
+                              var sta='<img src="{% static 'images/no.png' %}" height="20px" width="20px">';
+                          }
+
+                      $('<tr><td>'+name+'</td><td>'+number+'</td><td>'+time+'</td><td>'+week+'</td><td>'+day+'</td><td>'+sta+'</td></tr>').appendTo("#table");
+                     }
+
+
+
+            }
+
+            function getcourse(cLabel) {
+
+                var course=cLabel.split(',');
+                var cNum=course[0];
+                var cNo=course[1];
+                var cClassDay=course[2];
+
+                $.ajax({
+                    type: 'POST',
+                    url:  "http://127.0.0.1:8000/teacher/updateSignInfo",
+                    data: { "cNum" :cNum,'cNo':cNo,'cClassDay':cClassDay},
+                    async : false,
+                    dataType: 'json',
+                    success: function (msg) {
+                        {#console.log(msg);#}
+                        sta=0;
+                        var data=msg;
+                        datas=msg;
+                        {#console.log(getLength(data));#}
+                      $("#table  tr:not(:first)").empty("");
+                      if(getLength(data)>5){
+                            var max = 5;
+                        }
+                      else{
+                          var max = getLength(data);
+                        }
+                     for(var x=0;x<max;x++){
+                        var name=data[x].sName;
+                          var time=data[x].sSignTime;
+                          var number=data[x].sNum;
+                          var week=data[x].cClassWeek;
+                          var day=data[x].cClassDay;
+                          {#console.log(day);#}
+                          if(data[x].state==1){
+                               var sta='<img src="{% static 'images/true.png' %}" height="20px" width="20px">';
+                          }
+                          else {
+                              var sta='<img src="{% static 'images/no.png' %}" height="20px" width="20px">';
+                          }
+
+                      $('<tr><td>'+name+'</td><td>'+number+'</td><td>'+time+'</td><td>'+week+'</td><td>'+day+'</td><td>'+sta+'</td></tr>').appendTo("#table");
+                     }
+
+                }
+
+            })
+
+            }
+            function getLength(json){
+                var jsonLength=0;
+                for (var i in json) {
+                    jsonLength++;
+                }
+                return jsonLength;
+            }
+        </script>
+    <!-- Scripts -->
+{#			<script src="assets/js/jquery.min.js"></script>#}
+{#			<script src="assets/js/skel.min.js"></script>#}
+{#			<script src="assets/js/main.js"></script>#}
+            <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+			<script src="{% static 'assets/js/skel.min.js' %}"></script>
+			<script src="{% static 'assets/js/main.js' %}"></script>
+</body>
+</html>

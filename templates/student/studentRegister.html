@@ -1,0 +1,203 @@
+{% load staticfiles %}
+<!DOCTYPE HTML>
+<!--
+	Ethereal by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>FaceRecognition</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+{#		<link rel="stylesheet" href="assets/css/main.css" />#}
+		<link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+	</head>
+	<body>
+            <script>
+
+                </script>
+
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
+
+				<!-- Wrapper -->
+					<div id="wrapper" style=" margin: auto ">
+
+						<!-- Panel (Banner) -->
+						<section class="panel color4-alt">
+
+								<div class="inner columns divided" style="background:url({% static 'images/head_back.png' %}) no-repeat left top ">
+									<div class="span-2-25">
+                                        <img id="fanhui" src="{% static 'images/fanhui_pink.png' %}" style="position:absolute ;top:0;left:0;"  onclick="location.href='{% url 'student:sLogin' %}'">
+                                        <h3 class="major">学生注册</h3>
+										<form method="post" action="/student/sRegisterInfo">
+                                            {% csrf_token %}
+											<div class="field">
+												<label for="name">Number</label>
+												<input type="text" name="number" id="number" />
+											</div>
+                                            <div class="field ">
+												<label for="password">Password</label>
+												<input type="password" name="pwd" id="name" />
+											</div>
+											<div class="field half">
+												<input type="radio" id="demo-priority-low" name="gender" class="color2" checked  value="1"/>
+												<label for="demo-priority-low">Man</label>
+											</div>
+											<div class="field half">
+												<input type="radio" id="demo-priority-high" name="gender" class="color2"  value="0"/>
+												<label for="demo-priority-high">Woman</label>
+											</div>
+											<ul class="actions">
+												<li><input type="submit" value="Register" id="subbutton" class="button special disabled" /></li>
+											</ul>
+										</form>
+                                    </div>
+                            <div class="inner columns aligned">
+                                <div class="span-1-75">
+
+
+
+                                    <div  style=" height: 170px;width: 225px; margin-left: auto; margin-right: auto;background-color:#fff;
+                                    opacity: 0.8; text-align: center;">
+                                    <img hidden src="{% static 'images/true.png' %}" id="trueimg" height="30px" width="30px">
+                                    <video id="videos" height="171px"  autoplay="autoplay"></video>
+                                    <canvas id="canvas" height="170px" width="227px" ></canvas>
+                                    <img hidden src="{% static 'images/no.png' %}" id="noimg" height="30px" width="30px">
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div style="margin-left: auto; margin-right: auto;text-align:center; ">
+                                        <input type="button" value="Open"  onclick="getMedia();" class=" button special color2 icon fa-instagram" />&nbsp;&nbsp;
+                                        <input id="showinput" type="button" value="Take"  onclick="getPhoto();" class=" button special  color1 icon fa-instagram" />
+                                        <div id="message" style="margin-left: auto; margin-right: auto;text-align:center; "><h4 style=""></h4></div>
+                                 </div>
+                            </div>
+                                </div>
+                            </div>
+							</section>
+					</div>
+
+
+            </div>
+    <script type="text/javascript">
+           var video = document.querySelector('video');
+        var audio, audioType;
+        var canvas = document.getElementById('canvas');
+        var context1 = canvas.getContext('2d');
+        var co=0;
+        function success(stream) {
+            //兼容webkit核心浏览器
+              var CompatibleURL = window.URL || window.webkitURL;
+              //将视频流设置为video元素的源
+              console.log(stream);
+
+              //video.src = CompatibleURL.createObjectURL(stream);
+              video.srcObject = stream;
+        }
+        function error(e) {
+            alert('Error！'+e);
+        }
+        function getUserMedia(constraints, success, error) {
+          if (navigator.mediaDevices.getUserMedia) {
+            //最新的标准API
+            navigator.mediaDevices.getUserMedia(constraints).then(success).catch(error);
+          } else if (navigator.webkitGetUserMedia) {
+            //webkit核心浏览器
+            navigator.webkitGetUserMedia(constraints,success, error)
+          } else if (navigator.mozGetUserMedia) {
+            //firfox浏览器
+            navigator.mozGetUserMedia(constraints, success, error);
+          } else if (navigator.getUserMedia) {
+            //旧版API
+            navigator.getUserMedia(constraints, success, error);
+          }
+        }
+
+        function getMedia() {
+            $("#videos").show();
+            $("#canvas").hide();
+            $("#noimg").hide();
+            $("#trueimg").hide();
+            if(co==1){clearCanvas();return;}
+            if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
+              //调用用户媒体设备, 访问摄像头
+              getUserMedia({video : {width: 480, height: 320}}, success, error);
+            } else {
+              alert('不支持访问用户媒体');
+            }
+            video.play();
+        }
+
+        function drawVideoAtCanvas(video,context) {
+            window.setInterval(function () {
+                context.drawImage(video, 0, 0,225,170);
+            }, 60);
+        }
+
+        function getPhoto() {
+
+            context1.drawImage(video, 0, 0,227,170);
+
+            $("#videos").hide();
+            $("#canvas").show();
+            var Pic = document.getElementById("canvas").toDataURL("image/jpg");
+                //对其进行base64编 之后的字符串
+            Pic = Pic.replace(/^data:image\/(png);base64,/,"");
+
+            var IdCard=$("#number").val() ;
+                // Sending the image data to Server
+
+            $.ajax({
+                    type: 'POST',
+                    url:  "http://127.0.0.1:8000/student/srImage",
+                    data: { "imageData" : Pic, "id": IdCard},
+                    dataType: 'json',
+                    success: function (msg) {
+
+                        console.log(msg.state);
+                        if(msg.state==1){
+                             $("#subbutton").attr("class","button special");
+                            //  var h4=document.createElement("span");
+                            //  h4.innerHTML="采集成功，请点击完成注册";
+
+                            //  var me=document.getElementById("message");
+                            //  $("#message").attr("style","color:green;");
+                            //  me.appendChild(h4);
+                            var img= new Image();
+                            img.src="{% static 'images/true.png' %}";
+                            context1.drawImage(img,90,70,40,40);
+                        }
+                        else{
+                            //  var h4=document.createElement("span");
+                            //  h4.innerHTML="采集失败，请重新采集";
+
+                            //  var me=document.getElementById("message");
+                            //  $("#message").attr("style","color:green;");
+                            //  me.appendChild(h4);
+                             var img= new Image();
+                             img.src="{% static 'images/no.png' %}";
+                             context1.drawImage(img,90,70,40,40);
+                        }
+
+                }
+            });  //将video对象内指定的区域捕捉绘制到画布上指定的区域，实现拍照。
+        }
+
+        function clearCanvas(){
+
+        context1.clearRect(0,0,canvas.width,canvas.height);
+    }
+            </script>
+
+		<!-- Scripts -->
+{#			<script src="assets/js/jquery.min.js"></script>#}
+{#			<script src="assets/js/skel.min.js"></script>#}
+{#			<script src="assets/js/main.js"></script>#}
+            <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+			<script src="{% static 'assets/js/skel.min.js' %}"></script>
+			<script src="{% static 'assets/js/main.js' %}"></script>
+
+	</body>
+</html> 

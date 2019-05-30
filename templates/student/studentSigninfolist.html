@@ -1,0 +1,136 @@
+{% load staticfiles %}
+<!DOCTYPE HTML>
+<!--
+	Ethereal by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>FaceRecognition</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+{#		<link rel="stylesheet" href="assets/css/main.css" />#}
+        <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+		
+	</head>
+	<body  >
+		
+
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
+				
+				<!-- Wrapper -->
+					<div id="wrapper" style=" margin: auto ">
+
+						<!-- Panel (Banner) -->
+						<section class="panel color4">
+								
+								<div class="inner columns divided" style="background:url({% static 'images/head_back.png' %}) no-repeat left top ">
+									<div class="span-1-20">
+                                        <img id="fanhui" src="{% static 'images/fanhui_pink.png' %}" style="position:absolute ;top:0;left:0;"  onclick="location.href='{% url 'student:sPage' %}'">
+                                        <div>
+
+                                            <img src="{% static 'images/man.png' %}" height="200px" width="200px">
+                                        </div>
+                                        <h3 class="major"></h3>
+                                        <h3>姓名：{{ sName }}</h3>
+                                        <h3>学号：{{ request.session.studentId }}</h3>
+                                        <h3>性别：{{ sSex }}</h3>
+											
+									</div>
+									
+                                </div>
+                        
+                                
+                                
+						
+                        </section>
+                            <section class="panel color4">
+								<div class="inner columns aligned">
+									<div class="span-3">
+										<h3 class="major">Info</h3>
+										<div class="table-wrapper">
+											<table id="table">
+												<thead>
+													<tr>
+														<th>课程名</th>
+														<th>时间</th>
+														<th>签到</th>
+													</tr>
+												</thead>
+												<tbody scroll="no" style="overflow-x:hidden;overflow-y:hidden">
+                                                {% for sign in signInfo %}
+                                                    <tr>
+														<td>{{ sign.cName }}</td>
+														<td>{{ sign.sSignTime }}</td>
+{#														<td>&nbsp;&nbsp;<img src="images/true.png" height="20px" width="20px"></td>#}
+                                                        {% if sign.state == 1 %}
+                                                            <td  style="background: url({% static 'images/true.png' %}) no-repeat 25% center ; background-size:20px 20px;"></td>
+                                                        {% else %}
+                                                            <td  style="background: url({% static 'images/false.png' %}) no-repeat 25% center ; background-size:20px 20px;"></td>
+                                                        {% endif %}
+													</tr>
+                                                {% endfor %}
+                                                </tbody>
+
+
+											</table>
+										</div>
+                                        <div id="pre" hidden style="float: left"><a  href="#" class="button color small  icon fa-angle-left"  onclick="getpage(0)"> pre</a></div>
+                                        <div style="float: right"><a href="#" class="button small color icon fa-angle-right" onclick="getpage(1)"> next</a></div>
+
+									</div>	
+								</div>
+							</section>
+					</div>
+                    
+
+			</div>
+        <script>
+            var sta=0;
+            function getpage(ele){
+                $("#pre").show();
+                var sta=0;
+                if(ele==1){
+                    sta+=1;
+                }
+                else{
+                 sta-=1;
+                }
+                 $.ajax({
+                    type: 'POST',
+                    url:  "http://127.0.0.1:8000/student/sSetSign",
+                    data: { "pagenum" :sta},
+                    async : false,
+                    dataType: 'json',
+                    success: function (msg) {
+                     $("#table  tr:not(:first) tr:not(:end)").empty("");
+                     var course=msg.course;
+                     for(x in course){
+                          var name=x.name;
+                          var time=x.time;
+                          if(x.state==1){
+                               var sta='<img src="{% static 'images/true.png' %}" height="20px" width="20px">';
+                          }
+                          else {
+                              var sta='<img src="{% static 'images/no.png' %}" height="20px" width="20px">';
+                          }
+
+                      $('<tr><td>'+name+'</td><td>'+time+'</td><td>'+sta+'</td></tr>').appendTo("#table");
+                     }
+
+                }
+            })
+            }
+        </script>
+		<!-- Scripts -->
+{#			<script src="assets/js/jquery.min.js"></script>#}
+{#			<script src="assets/js/skel.min.js"></script>#}
+{#			<script src="assets/js/main.js"></script>#}
+            <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+			<script src="{% static 'assets/js/skel.min.js' %}"></script>
+			<script src="{% static 'assets/js/main.js' %}"></script>
+
+	</body>
+</html>

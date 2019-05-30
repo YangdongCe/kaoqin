@@ -1,0 +1,250 @@
+{#{% load staticfiles %}#}
+{#<!DOCTYPE HTML>#}
+{#<!--#}
+{#	Ethereal by HTML5 UP#}
+{#	html5up.net | @ajlkn#}
+{#	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)#}
+{#-->#}
+{#<html>#}
+{#	<head>#}
+{#		<title>FaceRecognition</title>#}
+{#		<meta charset="utf-8" />#}
+{#		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />#}
+{#		<link rel="stylesheet" href="assets/css/main.css" />#}
+{#        <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />#}
+{#	</head>#}
+{#	<body>#}
+{#		#}
+{##}
+{#		<!-- Page Wrapper -->#}
+{#			<div id="page-wrapper">#}
+{#				#}
+{#				<!-- Wrapper -->#}
+{#					<div id="wrapper" style=" margin: auto ">#}
+{##}
+{#						<!-- Panel (Banner) -->#}
+{#						<section class="panel color2-alt">#}
+{#								#}
+{#								<div class="inner columns divided">#}
+{#									<div class="span-3-25">#}
+{#                                        <h3 class="major">教师注册</h3>#}
+{#										<form method="post" action="/teacher/tRegisterInfo">#}
+{#                                            {% csrf_token %}#}
+{#											<div class="field  third">#}
+{#												<label for="name">Number</label>#}
+{#												<input type="text" name="name" id="name" />#}
+{#											</div>#}
+{#                                           #}
+{#											<div class="field third">#}
+{#												<label for="email">Name</label>#}
+{#												<input type="email" name="email" id="email" />#}
+{#											</div>#}
+{#                                             <div class="field third">#}
+{#												<label for="name">Course</label>#}
+{#												<input type="text" name="name" id="name" />#}
+{#											</div>#}
+{#                                            <div class="field ">#}
+{#												<label for="password">Password</label>#}
+{#												<input type="text" name="name" id="name" />#}
+{#											</div>#}
+{#                                          #}
+{#											<div class="field half">#}
+{#												<input type="radio" id="demo-priority-low" name="demo-priority" class="color2" checked />#}
+{#												<label for="demo-priority-low">Man</label>#}
+{#											</div>#}
+{#											<div class="field half">#}
+{#												<input type="radio" id="demo-priority-high" name="demo-priority" class="color2" />#}
+{#												<label for="demo-priority-high">Woman</label>#}
+{#											</div>#}
+{#											<ul class="actions">#}
+{#												<li><input type="submit" value="Register" class="button special" /></li>#}
+{#											</ul>#}
+{#										</form>#}
+{#									</div>#}
+{#									#}
+{#								</div>#}
+{#							</section>#}
+{#					</div>#}
+{#			</div>#}
+{##}
+{#		<!-- Scripts -->#}
+{#			<script src="assets/js/jquery.min.js"></script>#}
+{#			<script src="assets/js/skel.min.js"></script>#}
+{#			<script src="assets/js/main.js"></script>#}
+{#            <script src="{% static 'assets/js/jquery.min.js' %}"></script>#}
+{#			<script src="{% static 'assets/js/skel.min.js' %}"></script>#}
+{#			<script src="{% static 'assets/js/main.js' %}"></script>#}
+{##}
+{#	</body>#}
+{#</html>#}
+
+{% load staticfiles %}
+<!DOCTYPE HTML>
+<!--
+	Ethereal by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>FaceRecognition</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+
+	</head>
+	<body>
+
+
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
+
+				<!-- Wrapper -->
+					<div id="wrapper" style=" margin: auto ">
+
+						<!-- Panel (Banner) -->
+						<section class="panel color2-alt">
+
+								<div class="inner columns divided" style="background:url({% static 'images/head_back.png' %}) no-repeat left top ">
+									<div class="span-3-25">
+                                        <img id="fanhui" src="{% static 'images/fanhui_yellow.png' %}" style="position:absolute ;top:0;left:0;"  onclick="location.href='{% url 'teacher:tLogin' %}'">
+                                        <h3 class="major">教师注册<span style="color: #E9F01D;font-size: 13px;" hidden id="tishi">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;请重新输入正确的注册信息</span></h3>
+{#										<form method="post" action="{% url 'teacher:tRegisterInfo' %}">#}
+                                        <form method="post" action="#" id="form">
+                                            {% csrf_token %}
+											<div class="field  third">
+												<label for="name">Number</label>
+												<input type="text" name="number" id="number" />
+											</div>
+
+											<div class="field third">
+												<label for="email">Name</label>
+												<input type="text" name="name" id="names" />
+											</div>
+											<div class="field third">
+												<label for="password">Password</label>
+												<input type="password" name="password" id="password" />
+											</div>
+                                             <div class="field third">
+												<label for="name">课程号</label>
+												<input type="text"  id="cNum" />
+											</div>
+											<div class="field third">
+												<label for="name">课序号</label>
+												<input type="text" id="cNo" />
+											</div>
+											<div class="field third">
+												<label for="name">&nbsp;</label>
+												<a onclick="add()" class="button special color2">add</a>
+											</div>
+                                            <div class="field third">
+												<ul  id="J_List">
+												</ul>
+											</div>
+											<div class="field third">
+												<ul id="List">
+												</ul>
+											</div>
+											<div class="field third">
+												<ul  id="bList">
+												</ul>
+											</div>
+
+                                            <div class="field third">
+												<input type="radio" id="demo-priority-low" name="sex" class="color2" checked  value="1" />
+												<label for="demo-priority-low">Man</label>
+											</div>
+											<div class="field third">
+												<input type="radio" id="demo-priority-high" name="sex" class="color2"  value="0" />
+												<label for="demo-priority-high">Woman</label>
+											</div>
+											<div class="field third">
+
+												<input type="button" value="Register" class="button special" onclick="getpost()" />
+											</div>
+
+										</form>
+									</div>
+
+								</div>
+							</section>
+
+					</div>
+
+
+			</div>
+			<script>
+				var length=0;
+				var arr_cno=new Array();
+				var arr_courseid=new Array();//定义的两个数组存cno和courseID
+
+				function add(){
+				  var li_1=document.createElement("li");
+				  var li_2=document.createElement("li");
+				  var cNo = $("#cNo").val();
+				  var cNum = $("#cNum").val();
+
+				  addSpan(li_1,cNo);
+				  addSpan(li_2,cNum);
+				  $("#cNo").val(null);
+				  $("#cNum").val(null);
+
+				  document.getElementById("J_List").appendChild(li_2);
+				  document.getElementById("List").appendChild(li_1);
+				  length = arr_cno.push(cNo);
+				  length = arr_courseid.push(cNum);
+				}
+
+				function addSpan(li,text){
+          		  var span_1=document.createElement("span");
+             	  span_1.innerHTML=text;
+                  li.appendChild(span_1);
+          		}
+                function text() {
+
+
+                }
+				function getpost(){
+					var number=$("#number").val();
+					var name=$("#names").val();
+					var password=$("#password").val();
+                    var sex = $("input[name='sex']:checked").val();
+					var cno_str="";
+					var cnum_str="";
+					arr_cno.forEach(function (ele,index) {
+                        cno_str+=ele;
+                        cno_str+=",";
+                    });
+					cno_str+=$("#cNo").val();
+
+					arr_courseid.forEach(function (ele,index) {
+                        cnum_str+=ele;
+                        cnum_str+=",";
+                    });
+					cnum_str+=$("#cNum").val();
+					$.ajax({
+                    type: 'POST',
+                    url:  "http://127.0.0.1:8000/teacher/tRegisterInfo",
+                    data: { "cNum" :cnum_str ,"cNo":cno_str,"name":name,"number":number,"password":password,"sex":sex},
+                    dataType: 'json',
+                        success: function (msg) {
+{#                        alert("success");#}
+                        if(msg.flag == 1){
+                            window.location.href="http://127.0.0.1:8000/teacher/tLogin";
+                            {#console.log("跳转");#}
+                        }
+                        else{
+                            $("#tishi").show();
+                        }
+                }
+            });
+				}
+
+			</script>
+		<!-- Scripts -->
+            <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+			<script src="{% static 'assets/js/skel.min.js' %}"></script>
+			<script src="{% static 'assets/js/main.js' %}"></script>
+
+	</body>
+</html>

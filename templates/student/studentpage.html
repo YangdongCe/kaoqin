@@ -1,0 +1,76 @@
+{% load staticfiles %}
+<!DOCTYPE HTML>
+<!--
+	Ethereal by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>FaceRecognition</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+{#		<link rel="stylesheet" href="assets/css/main.css" />#}
+		<link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+
+	</head>
+	<body>
+		
+
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
+				
+				<!-- Wrapper -->
+					<div id="wrapper" style=" margin: auto ">
+
+						<!-- Panel (Banner) -->
+						<section class="panel color4">
+								
+								<div class="inner columns divided" style="background:url({% static 'images/head_back.png' %}) no-repeat left top ">
+									<div class="span-1-25">
+                                        <img id="fanhui" src="{% static 'images/fanhui_pink.png' %}" style="position:absolute ;top:0;left:0;"  onclick="location.href='http://127.0.0.1:8000/'">
+                                        <div>
+{#                                            <img src="images/panda.png" height="200px" width="200px">#}
+                                            <img src="{% static 'images/man.png' %}" height="200px" width="200px">
+                                        </div>
+                                        <h3 class="major"></h3>
+                                        <h3>姓名：{{ sName }}</h3>
+                                        <h3>学号：{{ sNum }}</h3>
+                                        <h3>性别：{{ sSex }}</h3>
+											
+									</div>
+									
+                                </div>
+                                <div class="inner columns divided" style="background:url({% static 'images/banner.png' %}) no-repeat right top ">
+									<div class="span-2-25">
+                                        <div >
+{#                                        <a href="studentSignpage.html" class="button large special color2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;考勤签到&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>#}
+                                            <a href="{% url 'student:sSignPage' %}" class="button large special color2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;考勤签到&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+
+                                            <br><br>
+{#                                        <a href="studentSigninfolist.html" class="button large color1 special">&nbsp;&nbsp;&nbsp;查看签到记录&nbsp;&nbsp;&nbsp;</a>#}
+                                            <a href="{% url 'student:sSingInfo' %}" class="button large color1 special">&nbsp;&nbsp;&nbsp;查看签到记录&nbsp;&nbsp;&nbsp;</a>
+
+                                        </div>
+										
+											
+									</div>
+									
+								</div>
+							</section>
+						
+					</div>
+                    
+
+			</div>
+
+		<!-- Scripts -->
+{#			<script src="assets/js/jquery.min.js"></script>#}
+{#			<script src="assets/js/skel.min.js"></script>#}
+{#			<script src="assets/js/main.js"></script>#}
+            <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+			<script src="{% static 'assets/js/skel.min.js' %}"></script>
+			<script src="{% static 'assets/js/main.js' %}"></script>
+
+	</body>
+</html>

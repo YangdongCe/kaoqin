@@ -1,0 +1,64 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+
+<script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+</head>
+<body>
+<script>$(document).ready(function(c) {
+	$('.close').on('click', function(c){
+
+		$('.login-form').fadeOut('slow', function(c){
+	  		$(window).attr('location','test.html');
+		});
+	});
+    $('.register').on('click', function(c){
+	  		$(window).attr('location','teacherRegister.html');
+	});
+});
+</script>
+ <!--SIGN UP-->
+<div id="page-wrapper">
+	<div id="wrapper" style=" margin: auto ">
+                     <section class="panel banner  right color2">
+								<div class="content color2 span-3">
+									<h2 class="major">教师登录 {% if state == 0 %}
+                                        <span style="color: #E9F01D;font-size: 13px;"  id="tishi">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;请重新输入正确的用户账号密码</span>
+                                        {% else  %}
+                                         <span style="color: #E9F01D;font-size: 13px;"  id="tishi"></span>
+                                        {% endif %}
+                                    </h2>
+									     <form method="post" action="/teacher/tLoginInfo"  >
+                                             {% csrf_token %}
+                                        <div class="field " >
+                                            <label for="name">Number</label>
+                                            <input type="text" name="tNum" id="name" />
+                                        </div>
+                                        <div class="field " >
+                                            <label for="password">Password</label>
+                                            <input type="password" name="pwd" id="name" />
+                                        </div>
+                                        <ul class="actions" >
+                                            <li><input type="submit" value="Login" class="button special color2" /></li>
+                                            <li><a href="{% url 'teacher:tRegister' %}" class="button ">Registe</a></li>
+                                        </ul>
+                                    </form>
+								</div>
+								<div class="image filtered span-1-75" data-position="25% 25%">
+									<img src="{% static 'images/teacher_login3.jpg' %}" alt="" />
+								</div>
+							</section>
+           </div>
+
+</div>
+
+
+
+</body>
+</html>

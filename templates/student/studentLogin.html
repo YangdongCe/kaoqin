@@ -1,0 +1,166 @@
+
+{% load staticfiles %}
+<!DOCTYPE HTML>
+<!--
+	Ethereal by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>FaceRecognition</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+{#		<link rel="stylesheet" href="assets/css/main.css" />#}
+		<link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+	</head>
+	<body>
+            <script>
+
+                </script>
+
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
+
+				<!-- Wrapper -->
+					<div id="wrapper" style=" margin: auto ">
+
+						<!-- Panel (Banner) -->
+						<section class="panel color4-alt">
+                            <div class="intro color4"  style="background: url({% static 'images/student_login.jpg' %})">
+                                <h2 class="major">学生人脸识别登陆</h2>
+                                <p>请确保你的脸正对摄像头，如果识别不成功可以使用学号密码登陆。 </p>
+                                <form method="post" action="/student/sLoginInfo"  >
+                                    {% csrf_token %}
+                                        <div class="field " hidden>
+                                            <label for="name">Number</label>
+                                            <input type="text" name="number" id="number" />
+                                        </div>
+                                        <div class="field " hidden>
+                                            <label for="password">Password</label>
+                                            <input type="password" name="pwd" id="pwd" />
+                                        </div>
+                                        <ul class="actions" hidden>
+                                            <li><input type="submit" value="Login" class="button special" /></li>
+                                        </ul>
+                                    </form>
+                            </div>
+                            <div class="inner columns aligned">
+                                <div class="span-1-75" style="text-align: center;">
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <div  style=" height: 170px;width: 225px; margin-left: auto; margin-right: auto;background-color:#fff;
+                                    opacity: 0.8; ">
+
+                                    <video id="videos" height="171px"  autoplay="autoplay"></video>
+                                    <canvas id="canvas" height="170px" width="227px" hidden></canvas>
+                                    </div>
+
+                                    <br>
+                                    <div hidden id="tishi" ><h4 style="color: #f17c67;">请将脸对准摄像头</h4></div>
+
+                                    <div style="margin-left: auto; margin-right: auto;text-align:center; ">
+                                        <input type="button" value="Open"  onclick="openVideo()" class=" button special color2 icon fa-instagram" />&nbsp;&nbsp;
+                                        <input id="showinput" type="button" value="Input"  onclick="getinput();" class=" button  color1 icon fa-instagram" />
+                                        <br><br>
+{#                                        <a href="studentRegister.html" class="button special small">Registe</a>#}
+                                        <a href=" {% url 'student:sRegister' %}" class="button special small">Registe</a>
+                                        </div>
+                                </div>
+                                </div>
+                        </section>
+					</div>
+            </div>
+    <script type="text/javascript">
+        var video = document.querySelector('video');
+        var audio, audioType;
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        function getinput(){
+                    $(".field").show();
+                    $(".actions").show();
+                    $("#videos").hide();
+                }
+        function success(stream) {
+            //兼容webkit核心浏览器
+              var CompatibleURL = window.URL || window.webkitURL;
+              //将视频流设置为video元素的源
+              console.log(stream);
+
+              //video.src = CompatibleURL.createObjectURL(stream);
+              video.srcObject = stream;
+        }
+        function error(e) {
+            alert('Error！'+e);
+        }
+        function getUserMedia(constraints, success, error) {
+          if (navigator.mediaDevices.getUserMedia) {
+            //最新的标准API
+            navigator.mediaDevices.getUserMedia(constraints).then(success).catch(error);
+          } else if (navigator.webkitGetUserMedia) {
+            //webkit核心浏览器
+            navigator.webkitGetUserMedia(constraints,success, error)
+          } else if (navigator.mozGetUserMedia) {
+            //firfox浏览器
+            navigator.mozGetUserMedia(constraints, success, error);
+          } else if (navigator.getUserMedia) {
+            //旧版API
+            navigator.getUserMedia(constraints, success, error);
+          }
+        }
+        function openVideo() {
+            if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
+              //调用用户媒体设备, 访问摄像头
+              getUserMedia({video : {width: 480, height: 320}}, success, error);
+            } else {
+              alert('不支持访问用户媒体');
+            }
+            video.play();
+            getpostPhoto();
+        }
+        function getpostPhoto(){
+
+             var timeID=window.setInterval(function () {
+                context.drawImage(video, 0, 0,227,170);
+                var Pic = document.getElementById("canvas").toDataURL("image/jpg");
+                //对其进行base64编 之后的字符串
+                Pic = Pic.replace(/^data:image\/(png);base64,/,"");
+
+                // Sending the image data to Server
+
+                $.ajax({
+                    type: 'POST',
+                    url:  "http://127.0.0.1:8000/student/sLoginImage",
+                    data: { "imageData" : Pic},
+                    async : false,
+                    dataType: 'json',
+                    success: function (msg) {
+{#                       alert("Done, Picture Uploaded.");#}
+{#                       location.href('http://www.baidu.com');#}
+{#                       window.location.href("http://www.baidu.com");#}
+
+                        if(msg.state===1){
+                           window.location.href="http://127.0.0.1:8000/student/sPage";
+                            window.clearInterval(timeID);
+                        }
+                        else if(msg.state===0){
+                                $("#tishi").show();
+
+{#                             这里写发送图片,不用400毫秒发送了#}
+{#                            alert("请重新采集图片")#}
+
+                        }
+                }
+            });
+            }, 800);
+        }
+            </script>
+
+		<!-- Scripts -->
+            <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+			<script src="{% static 'assets/js/skel.min.js' %}"></script>
+			<script src="{% static 'assets/js/main.js' %}"></script>
+
+	</body>
+</html>

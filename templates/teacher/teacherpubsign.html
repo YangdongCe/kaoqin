@@ -1,0 +1,106 @@
+{% load staticfiles %}
+<!DOCTYPE HTML>
+<!--
+	Ethereal by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html xmlns="http://www.w3.org/1999/html">
+	<head>
+		<title>FaceRecognition</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+
+	</head>
+	<body>
+	<div id="page-wrapper">
+				<!-- Wrapper -->
+					<div id="wrapper" style=" margin: auto ">
+<section class="panel color2-alt">
+							<div class="inner columns divided" style="background:url({% static 'images/head_back.png' %}) no-repeat left top ">
+									<div class="span-1-20" >
+                                         <img id="fanhui" src="{% static 'images/fanhui_yellow.png' %}" style="position:absolute ;top:0;left:0;" onclick="location.href='{% url 'teacher:tPage' %}'" >
+
+										<div style="width: 200px">
+                                            <img src="{% static 'images/teacherhead.png' %}"  >
+                                            <hr>
+                                        </div>
+
+
+                                        <h4>老师姓名：{{ request.session.tName }}</h4>
+                                        <h4>性别：{{ tSex }}</h4>
+									</div>
+									</div>
+									</section>
+									<section class="panel color2-alt">
+								    <div class="inner columns aligned">
+									<div class="span-5">
+										<h3 class="major">发布签到</h3>
+										<div class="table-wrapper">
+											<table>
+												<thead>
+													<tr>
+														<th>课程名</th>
+                                                        <th>课程号</th>
+                                                        <th>课序号</th>
+                                                        <th>教学周</th>
+                                                        <th>星期</th>
+                                                        <th>开始时间</th>
+														<th>发布签到</th>
+													</tr>
+												</thead>
+												<tbody>
+                                                {% for i in info %}
+													<tr>
+														<td>{{ i.cName }}</td>
+                                                        <td>{{ i.cNum }}</td>
+                                                        <td>{{ i.cNo }}</td>
+                                                        <td>{{ i.cWeek }}</td>
+                                                        <td>{{ i.cDay }}</td>
+                                                        <td><input id="{{ i.str }}" style="    background: transparent;border: solid 2px rgba(255, 255, 255, 0.25);border-radius: 0.25rem;color: inherit;display: block;outline: 0;padding: 0 0.75rem;text-decoration: none;width: 100%;"  value="" type="time"/></td>
+
+														<td> <a  id="{{ i.str }}a" href="#" class="button small special color1"  onclick="pubSign({{ i.cNum }},{{ i.cNo }},{{ i.str }})"  >发布</a></td>
+													</tr>
+                                                {% endfor %}
+												</tbody>
+											</table>
+										</div>
+                                     <div id="pre" hidden style="float: left"><a  href="#" class="button color small  icon fa-angle-left"  onclick="getpage(0)"> pre</a></div>
+                                        <div style="float: right"><a href="#" class="button small color icon fa-angle-right" onclick="getpage(1)"> next</a></div>
+                                    </div>
+
+									</div>
+									</div>
+							</section>
+
+								</div>
+			</div>
+    <script type="text/javascript">
+            function pubSign(num,no,timer) {
+                console.log(num);
+                 var time=($("#"+timer).val());
+                 console.log(time);
+                $.ajax({
+                        type: 'POST',
+                        url:  "http://127.0.0.1:8000/teacher/tSetSign",
+                        data: { "cNum" :num,"cNo":no,"cBegTime":time},
+                        dataType: 'json',
+                        success: function (msg) {
+                        $("#"+timer+"a").attr("class","button small special color1 disabled")
+                    }
+                });
+            //将video对象内指定的区域捕捉绘制到画布上指定的区域，实现拍照。
+        }
+        </script>
+
+		<!-- Scripts -->
+{#			<script src="assets/js/jquery.min.js"></script>#}
+{#			<script src="assets/js/skel.min.js"></script>#}
+{#			<script src="assets/js/main.js"></script>#}
+            <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+			<script src="{% static 'assets/js/skel.min.js' %}"></script>
+			<script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+</html>

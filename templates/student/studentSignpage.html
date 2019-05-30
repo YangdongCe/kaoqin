@@ -1,0 +1,118 @@
+{% load staticfiles %}
+<!DOCTYPE HTML>
+<!--
+	Ethereal by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>FaceRecognition</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+{#		<link rel="stylesheet" href="assets/css/main.css" />#}
+        <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+		
+	</head>
+	<body>
+		
+
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
+				
+				<!-- Wrapper -->
+					<div id="wrapper" style=" margin: auto ">
+
+						<!-- Panel (Banner) -->
+						<section class="panel color4">
+								
+								<div class="inner columns divided" style="background:url({% static 'images/head_back.png' %}) no-repeat left top ">
+									<div class="span-1-20">
+                                        <img id="fanhui" src="{% static 'images/fanhui_pink.png' %}" style="position:absolute ;top:0;left:0;"  onclick="location.href='{% url 'student:sPage' %}'">
+                                        <div>
+
+                                            <img src="{% static 'images/man.png' %}" height="200px" width="200px">
+                                        </div>
+                                        <h3 class="major"></h3>
+                                        <h3>姓名：{{ sName }}</h3>
+                                        <h3>学号：{{ sNum }}</h3>
+                                        <h3>性别：{{ sSex }}</h3>
+											
+									</div>
+									
+                                </div>
+                        
+                                
+                                
+						
+                        </section>
+                            <section class="panel color4">
+								
+								<div class="inner columns aligned">
+									<div class="span-4">
+										<h3 class="major">Sign</h3>
+										<div class="table-wrapper">
+											<table>
+												
+                                                <thead>
+													<tr>
+														<th>课程名</th>
+														<th>开始时间</th>
+                                                        <th>结束时间</th>
+														<th>签到</th>
+
+													</tr>
+												</thead>
+												<tbody>
+
+                                                {% for course in couseInfo %}
+                                                    <tr>
+														<td>{{ course.cName }}</td>
+														<td>{{ course.sSignBegTime }}</td>
+                                                        <td>{{ course.sSignEndTime }}</td>
+                                                        {% if   course.sState == 0 %}
+                                                            <td><a id="cLabel" href="#" class="button small special color1"  onclick="setSign({{ course.cNum }},{{ course.cNo }})" >Sign</a></td>
+                                                        {% else %}
+                                                        <td><a href="#" class="button small special color1 disabled" >Sign</a></td>
+                                                        {% endif %}
+                                                        <input type="hidden" id="cClassDay" value={{ course.cClassDay }} />
+													</tr>
+                                                {% endfor %}
+												</tbody>
+
+											</table>
+										</div>
+									</div>	
+								</div>
+							</section>
+					</div>
+			</div>
+        <script type="text/javascript">
+            function setSign(num,no) {
+                console.log(num);
+
+            var cClassDay=$("#cClassDay").val();
+            console.log(cClassDay);
+            $.ajax({
+                        type: 'POST',
+                        url:  "http://127.0.0.1:8000/student/sSetSign",
+                        data: { "cNo" :no,"cNum":num,"cClassDay":cClassDay},
+                        dataType: 'json',
+                        success: function (msg) {
+                               window.location.reload();
+                    }
+                });
+        }
+
+        </script>
+
+		<!-- Scripts -->
+{#			<script src="assets/js/jquery.min.js"></script>#}
+{#			<script src="assets/js/skel.min.js"></script>#}
+{#			<script src="assets/js/main.js"></script>#}
+            <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+			<script src="{% static 'assets/js/skel.min.js' %}"></script>
+			<script src="{% static 'assets/js/main.js' %}"></script>
+
+	</body>
+</html>
